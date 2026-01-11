@@ -152,4 +152,4 @@ MIT
 
 ## Author
 
-Built with ❤️ using Expo and Google Gemini AI
+Built with ❤️ by Abhishek Thakur
