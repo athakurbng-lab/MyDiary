@@ -18,6 +18,7 @@ import {
     removeAllApiKeys,
     maskApiKey,
 } from '../../services/storage/apiKeyStorage';
+import { reloadKeys } from '../../services/ai/geminiConfig';
 import { useTheme } from '../../context/ThemeContext';
 
 interface ApiKeyManagementModalProps {
@@ -62,6 +63,7 @@ export default function ApiKeyManagementModal({ visible, onClose }: ApiKeyManage
             }
 
             await addApiKeys(newKeys);
+            await reloadKeys();
             await loadApiKeys();
             setInputText('');
             Alert.alert('Success', `Added ${newKeys.length} API key(s)`);
@@ -83,6 +85,7 @@ export default function ApiKeyManagementModal({ visible, onClose }: ApiKeyManage
                     style: 'destructive',
                     onPress: async () => {
                         await removeApiKey(key);
+                        await reloadKeys();
                         await loadApiKeys();
                     },
                 },
@@ -101,6 +104,7 @@ export default function ApiKeyManagementModal({ visible, onClose }: ApiKeyManage
                     style: 'destructive',
                     onPress: async () => {
                         await removeAllApiKeys();
+                        await reloadKeys();
                         await loadApiKeys();
                     },
                 },
