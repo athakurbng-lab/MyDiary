@@ -37,6 +37,7 @@ export default function TaskFormScreen() {
                 title,
                 description,
                 deadline: deadline.toISOString(),
+                completed: false,
             });
             navigation.goBack();
         } catch (error) {

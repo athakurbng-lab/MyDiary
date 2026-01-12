@@ -17,7 +17,7 @@ export async function createTask(task: Omit<Task, 'id' | 'createdAt' | 'updatedA
         `INSERT INTO tasks (id, title, description, deadline, reminderTime, completed, createdAt, updatedAt)
      VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
         [newTask.id, newTask.title, newTask.description, newTask.deadline,
-        newTask.reminderTime, newTask.completed ? 1 : 0, newTask.createdAt, newTask.updatedAt]
+        newTask.reminderTime ?? null, newTask.completed ? 1 : 0, newTask.createdAt, newTask.updatedAt]
     );
 
     return newTask;
@@ -32,9 +32,10 @@ export async function getTaskById(id: string): Promise<Task | null> {
 
     if (!result) return null;
 
+    const { completed, ...rest } = result as any;
     return {
-        ...result,
-        completed: result.completed === 1,
+        ...rest,
+        completed: completed === 1,
     };
 }
 
@@ -44,10 +45,13 @@ export async function getAllTasks(): Promise<Task[]> {
         'SELECT * FROM tasks ORDER BY deadline ASC'
     );
 
-    return results.map(task => ({
-        ...task,
-        completed: task.completed === 1,
-    }));
+    return results.map(task => {
+        const { completed, ...rest } = task as any;
+        return {
+            ...rest,
+            completed: completed === 1,
+        };
+    });
 }
 
 export async function getPendingTasks(): Promise<Task[]> {
@@ -56,10 +60,13 @@ export async function getPendingTasks(): Promise<Task[]> {
         'SELECT * FROM tasks WHERE completed = 0 ORDER BY deadline ASC'
     );
 
-    return results.map(task => ({
-        ...task,
-        completed: false,
-    }));
+    return results.map(task => {
+        const { completed, ...rest } = task as any;
+        return {
+            ...rest,
+            completed: false,
+        };
+    });
 }
 
 export async function getCompletedTasks(): Promise<Task[]> {
@@ -68,10 +75,13 @@ export async function getCompletedTasks(): Promise<Task[]> {
         'SELECT * FROM tasks WHERE completed = 1 ORDER BY deadline DESC'
     );
 
-    return results.map(task => ({
-        ...task,
-        completed: true,
-    }));
+    return results.map(task => {
+        const { completed, ...rest } = task as any;
+        return {
+            ...rest,
+            completed: true,
+        };
+    });
 }
 
 export async function updateTask(id: string, updates: Partial<Omit<Task, 'id' | 'createdAt'>>): Promise<void> {
@@ -84,7 +94,7 @@ export async function updateTask(id: string, updates: Partial<Omit<Task, 'id' | 
     }
 
     const fields = Object.keys(updateData).map(key => `${key} = ?`).join(', ');
-    const values = [...Object.values(updateData), timestamp, id];
+    const values = [...Object.values(updateData), timestamp, id] as any[];
 
     await db.runAsync(
         `UPDATE tasks SET ${fields}, updatedAt = ? WHERE id = ?`,

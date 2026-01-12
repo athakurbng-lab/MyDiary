@@ -43,7 +43,7 @@ export interface Task {
   title: string;
   description: string;
   deadline: string;
-  reminderTime: string;
+  reminderTime?: string;
   completed: boolean;
   createdAt: string;
   updatedAt: string;

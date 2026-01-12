@@ -30,7 +30,7 @@ export default function SettingsScreen() {
                         value={isDark}
                         onValueChange={toggleTheme}
                         trackColor={{ false: '#767577', true: colors.primary }}
-                        thumbColor={colors.white}
+                        thumbColor="#FFFFFF"
                     />
                 </View>
             </View>

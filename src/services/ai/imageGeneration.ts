@@ -17,10 +17,10 @@ Return only the keywords separated by commas:`;
     // Use Unsplash API properly with access key
     // Since we don't have an Unsplash API key configured, we'll use Picsum (Lorem Picsum) 
     // which is a free, open-source image placeholder service
-    const keywords = imagePrompt.split(',').map(k => k.trim()).join(',');
+    const keywords = imagePrompt.split(',').map((k: string) => k.trim()).join(',');
 
     // Generate a semi-random ID based on keywords (so same keywords get same image)
-    const keywordHash = keywords.split('').reduce((acc, char) => {
+    const keywordHash = keywords.split('').reduce((acc: number, char: string) => {
         return acc + char.charCodeAt(0);
     }, 0);
     const imageId = (keywordHash % 1000) + 1; // IDs from 1 to 1000
